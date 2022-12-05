@@ -17,9 +17,7 @@
 상수가 포장하는 햄버거의 개수를 return 하도록 solution 함수를 완성하시오.
  */
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Stack;
 
 	/*
 	 * 배열을 리스트로 변환한다.
@@ -34,22 +32,25 @@ import java.util.stream.Collectors;
 			int [] caseTwo = {1,3,2,1,2,1,3,1,2};
 			int [] caseThree = {1,2,1,1,2,3,2,3,3};
 
-			if (solution(caseOne) == 2) {
+			int result = solution(caseOne);
+			if (result == 2) {
 				System.out.println(true);
 			} else {
-				System.out.println("result : " + solution(caseThree) + false);
+				System.out.println("false result : " +result);
 			}
 
-			if (solution(caseTwo) == 0) {
+			int result2 = solution(caseTwo);
+			if (result2 == 0) {
 				System.out.println(true);
 			} else {
-				System.out.println("result : " + solution(caseThree) + false);
+				System.out.println("false result : " + result2);
 			}
 
-			if (solution(caseThree) == 3) {
+			int result3 = solution(caseThree);
+			if (result3 == 3) {
 				System.out.println(true);
 			} else {
-				System.out.println("result : " + solution(caseThree) + false);
+				System.out.println("false result : " + result3);
 			}
 
 
@@ -57,48 +58,35 @@ import java.util.stream.Collectors;
 
 		public static int solution(int[] ingredient) {
 
-			return checkOrder(convertArrayToList(ingredient));
+			return makeHamburgers(ingredient);
 		}
 
-		private static List<Integer> convertArrayToList(int[] ingredient) {
+		private static int makeHamburgers(int [] ingredient) {
+			int count = 0;
+			Stack<Integer> hamburger = new Stack<>();
 
-			return Arrays.stream(ingredient)
-					.boxed()
-					.collect(Collectors.toList());
-		}
+			for (int in : ingredient) {
+				hamburger.push(in);
 
-		private static int checkOrder(List<Integer> ingredient) {
-			int first = 1;
-			int cnt = 0;
+				if (hamburger.size() >= 4) {
+					if ((hamburger.get(hamburger.size() - 4) == 1)
+						&& (hamburger.get(hamburger.size() - 3) == 2)
+						&& (hamburger.get(hamburger.size() - 2) == 3)
+						&& (hamburger.get(hamburger.size() - 1) == 1)) {
+						count++;
 
-			for (int i = 0; i < ingredient.size(); i++) {
-				if (ingredient.get(i) == first) {
-					boolean checking = checkCorrectOrder(ingredient.subList(i + 1, ingredient.size()));
-
-					if (checking) {
-						cnt++;
-						removeCorrectOrder(ingredient, i);
-						i = -1;
+						removeCorrectOrder(hamburger);
 					}
 				}
 			}
 
-			return cnt;
+			return count;
 		}
 
-		private static boolean checkCorrectOrder(List<Integer> order) {
-			if (order.size() >= 3) {
-				if (order.get(0) == 2 && order.get(1) == 3 && order.get(2) == 1) {
-					return true;
-				}
-			}
 
-			return false;
-		}
-
-		private static void removeCorrectOrder(List<Integer> order, int start) {
-			if (start + 4 > start) {
-				order.subList(start, start + 4).clear();
+		private static void removeCorrectOrder(Stack<Integer> ingredient) {
+			for (int i = 0; i < 4; i++) {
+				ingredient.pop();
 			}
 		}
 	}
